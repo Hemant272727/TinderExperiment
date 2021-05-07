@@ -1,0 +1,37 @@
+name: tinder_task_2
+description: A new Flutter project.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  connectivity: ^3.0.3
+  cupertino_icons: ^1.0.3
+  flutter_signin_button: ^2.0.0
+  flutter_tindercard: ^0.2.0
+  google_sign_in: ^4.1.4
+  http: ^0.12.2
+  shared_preferences: ^2.0.5
+  swipe_cards: ^0.0.4
+  flutter_bloc: ^7.0.0
+  equatable: ^2.0.0
+  data_connection_checker: ^0.3.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Regular.ttf
+          weight: 400
