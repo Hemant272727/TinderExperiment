@@ -36,6 +36,55 @@ class _SwipePageState extends State<SwipePage> {
     getTinderProfileData();
   }
 
+  addToSwipeItems(TinderProfileModel value) {
+    _swipeItems.add(
+      SwipeItem(
+        content: value,
+        likeAction: getNewSaveProfileData,
+        nopeAction: getNewProfileData,
+        superlikeAction: getNewSaveProfileData,
+      ),
+    );
+  }
+
+  getNewProfileData() async {
+    NetworkUtils().getTinderProfile().then((value) {
+      addToSwipeItems(value);
+    });
+  }
+
+  getNewSaveProfileData() async {
+    NetworkUtils().getTinderProfile().then((value) {
+      addToSwipeItems(value);
+      if (_sharedProfile.getStringList(StringConst.swipeCacheKey) != null) {
+        final dataList =
+            _sharedProfile.getStringList(StringConst.swipeCacheKey);
+        dataList.add(jsonEncode(value));
+        print(dataList.length);
+        _sharedProfile.setStringList(StringConst.swipeCacheKey, dataList);
+      } else {
+        final userData = jsonEncode(value);
+        _sharedProfile.setStringList(StringConst.swipeCacheKey, [userData]);
+      }
+    });
+  }
+
+  getStoredProfileData() async {
+    if (_sharedProfile.getStringList(StringConst.swipeCacheKey) != null) {
+      final dataList = _sharedProfile.getStringList(StringConst.swipeCacheKey);
+      for (var i = 0; i < dataList.length; i++) {
+        addToSwipeItems(TinderProfileModel.fromJson(jsonDecode(dataList[i])));
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   getTinderProfileData() async {
     _sharedProfile = await SharedPreferences.getInstance();
     setState(() {
@@ -107,63 +156,6 @@ class _SwipePageState extends State<SwipePage> {
         ),
       ),
     );
-  }
-
-  addToSwipeItems(TinderProfileModel value) {
-    _swipeItems.add(
-      SwipeItem(
-        content: value,
-        likeAction: getNewSaveProfileData,
-        nopeAction: getNewProfileData,
-        superlikeAction: getNewSaveProfileData,
-      ),
-    );
-  }
-
-  getNewProfileData() async {
-    NetworkUtils().getTinderProfile().then((value) {
-      addToSwipeItems(value);
-    });
-  }
-
-  getNewSaveProfileData() async {
-    NetworkUtils().getTinderProfile().then((value) {
-      addToSwipeItems(value);
-      if (_sharedProfile.getStringList(StringConst.swipeCacheKey) != null) {
-        print('Saving data if part');
-        final dataList =
-            _sharedProfile.getStringList(StringConst.swipeCacheKey);
-        dataList.add(jsonEncode(value));
-        print(dataList.length);
-        _sharedProfile.setStringList(StringConst.swipeCacheKey, dataList);
-        print(
-            ' last Object : ${TinderProfileModel.fromJson(jsonDecode(dataList.last)).results[0].user.dob}');
-      } else {
-        print('Saving data else part');
-        final userData = jsonEncode(value);
-        _sharedProfile.setStringList(StringConst.swipeCacheKey, [userData]);
-      }
-    });
-  }
-
-  getStoredProfileData() async {
-    print('getStoredProfileData');
-    if (_sharedProfile.getStringList(StringConst.swipeCacheKey) != null) {
-      final dataList = _sharedProfile.getStringList(StringConst.swipeCacheKey);
-      for (var i = 0; i < dataList.length; i++) {
-        addToSwipeItems(TinderProfileModel.fromJson(jsonDecode(dataList[i])));
-        print('addToSwipeItems');
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      print(
-          ' last Object : ${TinderProfileModel.fromJson(jsonDecode(dataList.last)).results[0].user.dob}');
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   IconData getIcon(int index) {

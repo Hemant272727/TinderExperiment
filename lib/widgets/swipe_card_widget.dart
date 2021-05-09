@@ -131,8 +131,10 @@ class SwipeCardWidget extends StatelessWidget {
       return '${swipeItems[index].content.results[0].user.location.street}';
     } else if (menuIndex == 4) {
       return '${swipeItems[index].content.results[0].user.phone}';
-    } else {
+    } else if (menuIndex == 5) {
       return '${swipeItems[index].content.results[0].user.password}';
+    } else {
+      return '';
     }
   }
 }
